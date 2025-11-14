@@ -166,13 +166,13 @@ int main(int, char**)
 
 
             if (ImGui::Button("Install"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-				counter++;
+                DriverInstall();
             if (ImGui::Button("Start"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 DriverStart();
             if (ImGui::Button("Stop"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 DriverStop();
             if (ImGui::Button("UnInstall"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-                counter++;
+                DriverUninstall();
             ImGui::End();
         }
 

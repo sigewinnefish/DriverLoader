@@ -6,4 +6,4 @@ void initDriverLoader();
 void DriverInstall();
 void DriverStart();
 void DriverStop();
-void DriverUnInstall();
+void DriverUninstall();
