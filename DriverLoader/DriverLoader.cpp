@@ -34,18 +34,18 @@ void DriverInstall()
 {
 	fs::path driverPath = ::path;
 	CHAR subKey[MAX_PATH] = "System\\CurrentControlSet\\Services\\";
-	strcat(subKey, driverPath.stem().string().data());
+	strcat_s(subKey, driverPath.stem().string().data());
 	HKEY hKey = NULL;
 	DWORD type = SERVICE_KERNEL_DRIVER;
 	DWORD start = SERVICE_DEMAND_START;
 	DWORD errorControl = SERVICE_ERROR_NORMAL;
 	CHAR imagePath[MAX_PATH] = "\\??\\";
-	strcat(imagePath, driverPath.string().data());
+	strcat_s(imagePath, driverPath.string().data());
 	RegCreateKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
 	RegSetValueExA(hKey,"Type",NULL,REG_DWORD, (BYTE*)&type,sizeof(type));
 	RegSetValueExA(hKey, "Start", NULL, REG_DWORD, (BYTE*)&start, sizeof(start));
 	RegSetValueExA(hKey, "ErrorControl", NULL, REG_DWORD, (BYTE*)&errorControl, sizeof(errorControl));
-	RegSetValueExA(hKey, "ImagePath", NULL, REG_EXPAND_SZ, (BYTE*)&imagePath, sizeof(char)*(strlen(imagePath)+1));
+	RegSetValueExA(hKey, "ImagePath", NULL, REG_EXPAND_SZ, (BYTE*)&imagePath, (DWORD)(sizeof(char)*(strlen(imagePath)+1)));
 	RegCloseKey(hKey);
 	return;
 }
@@ -54,7 +54,7 @@ void DriverUninstall()
 {
 	fs::path driverPath = ::path;
 	CHAR subKey[MAX_PATH] = "System\\CurrentControlSet\\Services\\";
-	strcat(subKey, driverPath.stem().string().data());
+	strcat_s(subKey, driverPath.stem().string().data());
 	HKEY hKey = NULL;
 	RegCreateKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
 	RegDeleteKeyA(HKEY_LOCAL_MACHINE, subKey);
@@ -71,7 +71,7 @@ void DriverStart()
 	}
 	WCHAR service[MAX_PATH] = L"\\Registry\\Machine\\System\\CurrentControlSet\\Services\\";
 	fs::path driverPath = ::path;
-	wcscat(service, driverPath.stem().wstring().data());
+	wcscat_s(service, driverPath.stem().wstring().data());
 	UNICODE_STRING ustr;
 	RtlInitUnicodeString(&ustr, service);
 	NtLoadDriver(&ustr);
@@ -87,7 +87,7 @@ void DriverStop()
 	}
 	WCHAR service[MAX_PATH] = L"\\Registry\\Machine\\System\\CurrentControlSet\\Services\\";
 	fs::path driverPath = ::path;
-	wcscat(service, driverPath.stem().wstring().data());
+	wcscat_s(service, driverPath.stem().wstring().data());
 	UNICODE_STRING ustr;
 	RtlInitUnicodeString(&ustr, service);
 	NtUnloadDriver(&ustr);
