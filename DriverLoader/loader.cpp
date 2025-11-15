@@ -102,4 +102,5 @@ void DriverStop()
 	#undef CHECK_STATUS
 	#define CHECK_STATUS(status) do { if (status) { ::s = DriverStopFailed; return; } } while(0)
 	CHECK_STATUS(NtUnloadDriver(&ustr));
+	::s = DriverStopOK;
 }
