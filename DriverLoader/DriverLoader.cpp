@@ -1,94 +1,92 @@
+﻿
+// DriverLoader.cpp: 定义应用程序的类行为。
+//
+
+#include "pch.h"
+#include "framework.h"
 #include "DriverLoader.h"
-#include <filesystem>
+#include "DriverLoaderDlg.h"
 
-#pragma comment(lib, "ntdll.lib")
+#ifdef _DEBUG
+#define new DEBUG_NEW
+#endif
 
-namespace fs = std::filesystem;
-typedef NTSTATUS(NTAPI* pfnNtLoadDriver)(PUNICODE_STRING);
-typedef NTSTATUS(NTAPI* pfnRtlAdjustPrivilege)(ULONG Privilege, BOOLEAN Enable, BOOLEAN CurrentThread, PBOOLEAN Enabled);
 
-HMODULE ntdll;
+// CDriverLoaderApp
 
-void initDriverLoader()
+BEGIN_MESSAGE_MAP(CDriverLoaderApp, CWinApp)
+	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+END_MESSAGE_MAP()
+
+
+// CDriverLoaderApp 构造
+
+CDriverLoaderApp::CDriverLoaderApp()
 {
-	ntdll = GetModuleHandle(L"ntdll.dll");
-	if (!ntdll)
+	// TODO: 在此处添加构造代码，
+	// 将所有重要的初始化放置在 InitInstance 中
+}
+
+
+// 唯一的 CDriverLoaderApp 对象
+
+CDriverLoaderApp theApp;
+
+
+// CDriverLoaderApp 初始化
+
+BOOL CDriverLoaderApp::InitInstance()
+{
+	CWinApp::InitInstance();
+
+
+	// 创建 shell 管理器，以防对话框包含
+	// 任何 shell 树视图控件或 shell 列表视图控件。
+	CShellManager *pShellManager = new CShellManager;
+
+	// 激活“Windows Native”视觉管理器，以便在 MFC 控件中启用主题
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
+
+	// 标准初始化
+	// 如果未使用这些功能并希望减小
+	// 最终可执行文件的大小，则应移除下列
+	// 不需要的特定初始化例程
+	// 更改用于存储设置的注册表项
+	// TODO: 应适当修改该字符串，
+	// 例如修改为公司或组织名
+	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
+
+	CDriverLoaderDlg dlg;
+	m_pMainWnd = &dlg;
+	INT_PTR nResponse = dlg.DoModal();
+	if (nResponse == IDOK)
 	{
-		return;
+		// TODO: 在此放置处理何时用
+		//  “确定”来关闭对话框的代码
+	}
+	else if (nResponse == IDCANCEL)
+	{
+		// TODO: 在此放置处理何时用
+		//  “取消”来关闭对话框的代码
+	}
+	else if (nResponse == -1)
+	{
+		TRACE(traceAppMsg, 0, "警告: 对话框创建失败，应用程序将意外终止。\n");
+		TRACE(traceAppMsg, 0, "警告: 如果您在对话框上使用 MFC 控件，则无法 #define _AFX_NO_MFC_CONTROLS_IN_DIALOGS。\n");
 	}
 
-	pfnRtlAdjustPrivilege RtlAdjustPrivilege = (pfnRtlAdjustPrivilege)GetProcAddress(ntdll, "RtlAdjustPrivilege");
-	if (!RtlAdjustPrivilege)
+	// 删除上面创建的 shell 管理器。
+	if (pShellManager != nullptr)
 	{
-		return;
+		delete pShellManager;
 	}
 
-	LUID luid;
-	LookupPrivilegeValue(NULL, SE_LOAD_DRIVER_NAME, &luid);
+#if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
+	ControlBarCleanUp();
+#endif
 
-	BOOLEAN bEnabled;
-	RtlAdjustPrivilege(luid.LowPart, TRUE, FALSE, &bEnabled);
+	// 由于对话框已关闭，所以将返回 FALSE 以便退出应用程序，
+	//  而不是启动应用程序的消息泵。
+	return FALSE;
 }
 
-void DriverInstall()
-{
-	fs::path driverPath = ::path;
-	CHAR subKey[MAX_PATH] = "System\\CurrentControlSet\\Services\\";
-	strcat_s(subKey, driverPath.stem().string().data());
-	HKEY hKey = NULL;
-	DWORD type = SERVICE_KERNEL_DRIVER;
-	DWORD start = SERVICE_DEMAND_START;
-	DWORD errorControl = SERVICE_ERROR_NORMAL;
-	CHAR imagePath[MAX_PATH] = "\\??\\";
-	strcat_s(imagePath, driverPath.string().data());
-	RegCreateKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
-	RegSetValueExA(hKey,"Type",NULL,REG_DWORD, (BYTE*)&type,sizeof(type));
-	RegSetValueExA(hKey, "Start", NULL, REG_DWORD, (BYTE*)&start, sizeof(start));
-	RegSetValueExA(hKey, "ErrorControl", NULL, REG_DWORD, (BYTE*)&errorControl, sizeof(errorControl));
-	RegSetValueExA(hKey, "ImagePath", NULL, REG_EXPAND_SZ, (BYTE*)&imagePath, (DWORD)(sizeof(char)*(strlen(imagePath)+1)));
-	RegCloseKey(hKey);
-	return;
-}
-
-void DriverUninstall()
-{
-	fs::path driverPath = ::path;
-	CHAR subKey[MAX_PATH] = "System\\CurrentControlSet\\Services\\";
-	strcat_s(subKey, driverPath.stem().string().data());
-	HKEY hKey = NULL;
-	RegCreateKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_WRITE, NULL, &hKey, NULL);
-	RegDeleteKeyA(HKEY_LOCAL_MACHINE, subKey);
-	RegCloseKey(hKey);
-	return;
-}
-
-void DriverStart() 
-{
-	pfnNtLoadDriver NtLoadDriver = (pfnNtLoadDriver)GetProcAddress(ntdll, "NtLoadDriver"); //https://ntdoc.m417z.com/ntloaddriver
-	if (!NtLoadDriver)
-	{
-		return;
-	}
-	WCHAR service[MAX_PATH] = L"\\Registry\\Machine\\System\\CurrentControlSet\\Services\\";
-	fs::path driverPath = ::path;
-	wcscat_s(service, driverPath.stem().wstring().data());
-	UNICODE_STRING ustr;
-	RtlInitUnicodeString(&ustr, service);
-	NtLoadDriver(&ustr);
-}
-
-
-void DriverStop()
-{
-	pfnNtLoadDriver NtUnloadDriver = (pfnNtLoadDriver)GetProcAddress(ntdll, "NtUnloadDriver"); //https://ntdoc.m417z.com/ntunloaddriver
-	if (!NtUnloadDriver)
-	{
-		return;
-	}
-	WCHAR service[MAX_PATH] = L"\\Registry\\Machine\\System\\CurrentControlSet\\Services\\";
-	fs::path driverPath = ::path;
-	wcscat_s(service, driverPath.stem().wstring().data());
-	UNICODE_STRING ustr;
-	RtlInitUnicodeString(&ustr, service);
-	NtUnloadDriver(&ustr);
-}

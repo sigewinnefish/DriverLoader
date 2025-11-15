@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36705.20 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DriverLoader", "DriverLoader\DriverLoader.vcxproj", "{9F316E83-5AE5-4939-A723-305A94F48005}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DriverLoader", "DriverLoader\DriverLoader.vcxproj", "{082329D6-0018-F519-D254-D9B784ECE731}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,35 +11,21 @@ Global
 		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-		RemoteDBG|x64 = RemoteDBG|x64
-		RemoteDBG|x86 = RemoteDBG|x86
-		RemoteREL|x64 = RemoteREL|x64
-		RemoteREL|x86 = RemoteREL|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x64.ActiveCfg = Debug|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x64.Build.0 = Debug|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x86.ActiveCfg = Debug|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Debug|x86.Build.0 = Debug|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Release|x64.ActiveCfg = Release|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Release|x64.Build.0 = Release|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Release|x86.ActiveCfg = Release|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.Release|x86.Build.0 = Release|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteDBG|x64.ActiveCfg = RemoteDBG|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteDBG|x64.Build.0 = RemoteDBG|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteDBG|x64.Deploy.0 = RemoteDBG|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteDBG|x86.ActiveCfg = RemoteDBG|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteDBG|x86.Build.0 = RemoteDBG|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteREL|x64.ActiveCfg = RemoteREL|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteREL|x64.Build.0 = RemoteREL|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteREL|x64.Deploy.0 = RemoteREL|x64
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteREL|x86.ActiveCfg = RemoteREL|Win32
-		{9F316E83-5AE5-4939-A723-305A94F48005}.RemoteREL|x86.Build.0 = RemoteREL|Win32
+		{082329D6-0018-F519-D254-D9B784ECE731}.Debug|x64.ActiveCfg = Debug|x64
+		{082329D6-0018-F519-D254-D9B784ECE731}.Debug|x64.Build.0 = Debug|x64
+		{082329D6-0018-F519-D254-D9B784ECE731}.Debug|x86.ActiveCfg = Debug|Win32
+		{082329D6-0018-F519-D254-D9B784ECE731}.Debug|x86.Build.0 = Debug|Win32
+		{082329D6-0018-F519-D254-D9B784ECE731}.Release|x64.ActiveCfg = Release|x64
+		{082329D6-0018-F519-D254-D9B784ECE731}.Release|x64.Build.0 = Release|x64
+		{082329D6-0018-F519-D254-D9B784ECE731}.Release|x86.ActiveCfg = Release|Win32
+		{082329D6-0018-F519-D254-D9B784ECE731}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {65270EA9-61C1-47E8-81F1-58F595BD51D1}
+		SolutionGuid = {CDFCD048-198B-4AF5-9EF3-8131284EFA3F}
 	EndGlobalSection
 EndGlobal
